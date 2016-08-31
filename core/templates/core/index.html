@@ -1,11 +1,35 @@
 <!DOCTYPE html>
+{% load i18n %}
 <html>
 <head>
-    <title>Локализация Django приложений</title>
+    <title>{% trans "Локализация Django приложений" %}</title>
 </head>
 
 <body>
-    <p>Просто текст, который нужно будет перевести</p>
+    <p>{% trans "Просто текст, который нужно будет перевести" %}</p>
     <p>{{ output }}</p>
+
+
+{% get_current_language as lang %}
+{% get_available_languages as languages %}
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<div style="float:left;padding-top:10px;padding-left:10px">
+    <ul>
+    {% for language in languages %}
+       <li style="float:left; padding-right:5px;">
+           <form method="POST" action="{% url 'set_language' %}">
+               {% csrf_token %}
+               <input type="hidden" name="language" value="{{ language.0 }}" />
+
+           <a
+               onclick="$(this).parent().submit()"
+               style="padding:3px; {% ifequal lang language.0 %}color: black;background: lightgray;{% endifequal %}"
+                                                     href="#">{{ language.0|upper }}</a>
+       </form>
+
+       </li>
+    {% endfor %}
+    </ul>
+</div>
 </body>
 </html>
